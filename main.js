@@ -1,14 +1,34 @@
+//parser library loader
+var lib = document.createElement('script');
+lib.src = "lib.js";
+lib.onload = () => {lib.loaded = true};
+document.head.appendChild(lib);
+
+
+
+//reads file blob
 function parseFile(e) {
-  console.log('event triggered');
-  const file = e.target;
+  //makes sure library is loaded.
+  if (!lib.loaded) {
+    console.log('err: parser library not loaded');
+    return;
+  }
+  const file = e.target.files[0];
+  const name = file.name.split('.');
+  const type = name[name.length-1]
   const fr = new FileReader();
   fr.onload = () => {
-    console.log(reader.result);
+    const lines = fr.result.split("\n");
+    parseLines(type, lines);
   }
-  fr.readAsText(file.files[0]);
+  fr.readAsText(file);
+}
+
+//passes lines through parser library
+function parseLines(type, lines) {
+  parsers[type](lines.slice(0, -1));
 }
 
 window.onload = () => {
-  console.log('loaded');
-  document.getElementById("input").addEventListener("onchange", parseFile);
+  document.getElementById("input").addEventListener("change", parseFile);
 }
