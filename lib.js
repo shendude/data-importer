@@ -13,9 +13,12 @@ function csv(lines) {
     let words = [];
     for (var i = 0; i < blocks.length; i++) {
       if (i % 2 !== 0) {
-        words = words.splice
+        words = words.slice(0, -1);
         words = words.concat([blocks[i]]);
       } else {
+        if (words.length) {
+          blocks[i] = blocks[i].slice(1);
+        }
         words = words.concat(blocks[i].split(','));
       }
     }
